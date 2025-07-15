@@ -66,7 +66,7 @@ You have the freedom to choose your stack, but we recommend using common, modern
 * **Database:** PostgreSQL, SQLite, or MongoDB.
 * **AI Service:** We recommend the **Google Gemini API**, as it supports streaming responses and has a generous free tier. You can get an API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
-## Project Structure
+## Example Project Structure (feel free to change as needed)
 
 ```
 /
