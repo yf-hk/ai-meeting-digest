@@ -57,6 +57,10 @@ For candidates who wish to demonstrate a deeper level of expertise, we highly en
 
 **We explicitly encourage you to use AI-powered coding assistants.** A modern engineer's skill set includes the ability to use these tools effectively. Part of this evaluation is to understand *how* you use them.
 
+### Frontend / Backend / Fullstack?
+
+We believe with in the AI coding era, **all** software engineers are somewhat fullstack engineers, so please try your best to develop the backend part with help of AI if you are a frontend developer (same if you are a backend developer). When evaluating your code, we would take these into consideration, ie, if you are a frontend developer but you are able to complete the backend part with reasonable quality, that would be a bonus point when we match you with any frontend jobs.
+
 ## Technical Requirements
 
 You have the freedom to choose your stack, but we recommend using common, modern technologies.
