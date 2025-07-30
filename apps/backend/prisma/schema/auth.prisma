@@ -1,0 +1,67 @@
+model User {
+  id             String    @id @map("_id")
+  name           String    @map("name")
+  email          String    @map("email")
+  emailVerified  Boolean   @map("email_verified")
+  image          String?   @map("image")
+  createdAt      DateTime  @map("created_at")
+  updatedAt      DateTime  @map("updated_at")
+  sessions       Session[]
+  accounts       Account[]
+  
+  // Meeting digest relations
+  ownedWorkspaces      Workspace[]           @relation("WorkspaceOwner")
+  workspaceMemberships WorkspaceMember[]
+  meetings             Meeting[]
+  meetingParticipations MeetingParticipant[]
+  actionItems          ActionItem[]
+  comments             Comment[]
+
+  @@unique([email])
+  @@map("users")
+}
+
+model Session {
+  id         String   @id @map("_id")
+  expiresAt  DateTime @map("expires_at")
+  token      String   @map("token")
+  createdAt  DateTime @map("created_at")
+  updatedAt  DateTime @map("updated_at")
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  userId     String   @map("user_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("sessions")
+}
+
+model Account {
+  id                       String    @id @map("_id")
+  accountId                String    @map("account_id")
+  providerId               String    @map("provider_id")
+  userId                   String    @map("user_id")
+  user                     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken              String?   @map("access_token")
+  refreshToken             String?   @map("refresh_token")
+  idToken                  String?   @map("id_token")
+  accessTokenExpiresAt     DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt    DateTime? @map("refresh_token_expires_at")
+  scope                    String?   @map("scope")
+  password                 String?   @map("password")
+  createdAt                DateTime  @map("created_at")
+  updatedAt                DateTime  @map("updated_at")
+
+  @@map("accounts")
+}
+
+model Verification {
+  id         String    @id @map("_id")
+  identifier String    @map("identifier")
+  value      String    @map("value")
+  expiresAt  DateTime  @map("expires_at")
+  createdAt  DateTime? @map("created_at")
+  updatedAt  DateTime? @map("updated_at")
+
+  @@map("verifications")
+}
