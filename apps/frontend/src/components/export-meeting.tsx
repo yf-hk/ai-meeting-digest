@@ -7,7 +7,8 @@ import {
   Printer,
   Share2,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
@@ -18,6 +19,8 @@ interface ExportMeetingProps {
 export function ExportMeeting({ meeting }: ExportMeetingProps) {
   const [isExporting, setIsExporting] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 })
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
   const exportToJSON = () => {
     const exportData = {
@@ -334,11 +337,44 @@ export function ExportMeeting({ meeting }: ExportMeetingProps) {
     window.open(`mailto:?subject=${subject}&body=${body}`)
   }
 
+  const updateDropdownPosition = () => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect()
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.right - 192 + window.scrollX, // 192px = w-48
+      })
+    }
+  }
+
+  const handleToggleDropdown = () => {
+    if (!isDropdownOpen) {
+      updateDropdownPosition()
+    }
+    setIsDropdownOpen(!isDropdownOpen)
+  }
+
+  useEffect(() => {
+    if (isDropdownOpen) {
+      const handleScroll = () => updateDropdownPosition()
+      const handleResize = () => updateDropdownPosition()
+
+      window.addEventListener('scroll', handleScroll)
+      window.addEventListener('resize', handleResize)
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll)
+        window.removeEventListener('resize', handleResize)
+      }
+    }
+  }, [isDropdownOpen])
+
   return (
     <div className="relative">
       <Button
         className="flex items-center gap-2"
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        onClick={handleToggleDropdown}
+        ref={buttonRef}
         size="sm"
         variant="outline"
       >
@@ -347,87 +383,104 @@ export function ExportMeeting({ meeting }: ExportMeetingProps) {
         <ChevronDown className="h-3 w-3" />
       </Button>
 
-      {isDropdownOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setIsDropdownOpen(false)}
-          />
-          <div className="absolute top-full right-0 z-20 mt-1 w-48 rounded-md border bg-popover p-1 shadow-md">
-            <button
-              className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
-              onClick={() => {
-                exportToMarkdown()
-                setIsDropdownOpen(false)
+      {isDropdownOpen &&
+        createPortal(
+          <>
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setIsDropdownOpen(false)}
+              onKeyDown={(e) => e.key === 'Escape' && setIsDropdownOpen(false)}
+              role="button"
+              tabIndex={-1}
+            />
+            <div
+              className="fixed z-[9999] w-48 rounded-md border bg-popover p-1 shadow-lg"
+              style={{
+                top: dropdownPosition.top,
+                left: dropdownPosition.left,
               }}
             >
-              <FileText className="mr-2 h-4 w-4" />
-              Download as Markdown
-            </button>
-
-            <button
-              className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
-              onClick={() => {
-                exportToJSON()
-                setIsDropdownOpen(false)
-              }}
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Download as JSON
-            </button>
-
-            <button
-              className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent disabled:opacity-50"
-              disabled={isExporting}
-              onClick={() => {
-                exportToPDF()
-                setIsDropdownOpen(false)
-              }}
-            >
-              <Printer className="mr-2 h-4 w-4" />
-              {isExporting ? 'Preparing PDF...' : 'Print / Save as PDF'}
-            </button>
-
-            <div className="-mx-1 my-1 h-px bg-muted" />
-
-            <button
-              className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
-              onClick={() => {
-                copyToClipboard()
-                setIsDropdownOpen(false)
-              }}
-            >
-              <Share2 className="mr-2 h-4 w-4" />
-              Copy to Clipboard
-            </button>
-
-            <button
-              className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
-              onClick={() => {
-                shareViaEmail()
-                setIsDropdownOpen(false)
-              }}
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              Share via Email
-            </button>
-
-            {meeting.summary?.publicId && (
               <button
                 className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
                 onClick={() => {
-                  const shareUrl = `${window.location.origin}/digest/${meeting.summary.publicId}`
-                  navigator.clipboard.writeText(shareUrl)
+                  exportToMarkdown()
                   setIsDropdownOpen(false)
                 }}
+                type="button"
               >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Copy Public Link
+                <FileText className="mr-2 h-4 w-4" />
+                Download as Markdown
               </button>
-            )}
-          </div>
-        </>
-      )}
+
+              <button
+                className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
+                onClick={() => {
+                  exportToJSON()
+                  setIsDropdownOpen(false)
+                }}
+                type="button"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download as JSON
+              </button>
+
+              <button
+                className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent disabled:opacity-50"
+                disabled={isExporting}
+                onClick={() => {
+                  exportToPDF()
+                  setIsDropdownOpen(false)
+                }}
+                type="button"
+              >
+                <Printer className="mr-2 h-4 w-4" />
+                {isExporting ? 'Preparing PDF...' : 'Print / Save as PDF'}
+              </button>
+
+              <div className="-mx-1 my-1 h-px bg-muted" />
+
+              <button
+                className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
+                onClick={() => {
+                  copyToClipboard()
+                  setIsDropdownOpen(false)
+                }}
+                type="button"
+              >
+                <Share2 className="mr-2 h-4 w-4" />
+                Copy to Clipboard
+              </button>
+
+              <button
+                className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
+                onClick={() => {
+                  shareViaEmail()
+                  setIsDropdownOpen(false)
+                }}
+                type="button"
+              >
+                <Mail className="mr-2 h-4 w-4" />
+                Share via Email
+              </button>
+
+              {meeting.summary?.publicId && (
+                <button
+                  className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
+                  onClick={() => {
+                    const shareUrl = `${window.location.origin}/digest/${meeting.summary.publicId}`
+                    navigator.clipboard.writeText(shareUrl)
+                    setIsDropdownOpen(false)
+                  }}
+                  type="button"
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Copy Public Link
+                </button>
+              )}
+            </div>
+          </>,
+          document.body
+        )}
     </div>
   )
 }

@@ -18,12 +18,14 @@ I chose this modern, type-safe stack for several reasons:
 - **OpenRouter**: Provides access to multiple AI models (Gemini 2.5 Flash, Llama 3.2) with automatic fallback, rate limiting protection, and unified API interface for reliability
 - **Tailwind CSS**: Rapid UI development with consistent design system
 
+I prefer using cutting-edge software and frameworks that offer superior performance, cost-effectiveness, and robustness. I tend to go to the extreme, both with technology and with products. Honestly, this can be both a good and a bad thing. If I have to work in a team where people don’t care about or love new technologies, or aren’t willing to push boundaries, I find myself lacking motivation and end up doing mediocre work—work that I know could be so much better.
+
 ### Development Tools & Workflow
 
 - **Bun**: Fast JavaScript runtime and package manager for improved development speed
 - **Moonrepo**: Monorepo management tool for coordinating workspace builds and dependencies
 - **Biome**: Ultra-fast linter and formatter for consistent code quality across the entire codebase
-- **Ultracite**: Advanced citation and reference management for documentation
+- **Ultracite**: All in one Biome configuration defaults
 - **Husky + lint-staged**: Git hooks for automated code quality checks on commit
 - **Playwright**: End-to-end testing framework for comprehensive user journey testing
 - **Vitest**: Fast unit testing framework with excellent TypeScript support
@@ -150,7 +152,7 @@ bun run test:e2e:ui
 
 ### What I Would Do Differently With More Time
 
-1. **Real-time Collaboration**: Implement WebSocket-based real-time editing of summaries and action items
+1. **Real-time Collaboration**: Implement SSE-based real-time editing of summaries and action items
 2. **Advanced Analytics**: Add more sophisticated meeting insights and productivity metrics
 3. **Mobile App**: Create React Native companion app for mobile access
 4. **Integration APIs**: Build webhooks and integrations with Slack, Teams, and calendar systems
