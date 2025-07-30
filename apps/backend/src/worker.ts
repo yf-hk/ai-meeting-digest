@@ -1,8 +1,6 @@
-import 'dotenv/config'
 import { RPCHandler } from '@orpc/server/fetch'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { logger } from 'hono/logger'
 import { auth } from './lib/auth'
 import { createContext } from './lib/context'
 import { appRouter } from './routers/index'
@@ -10,21 +8,35 @@ import { setupSSERoutes } from './routes/sse'
 
 const app = new Hono()
 
-app.use(logger())
+// CORS middleware
 app.use(
   '/*',
   cors({
-    origin: (process.env.CORS_ORIGINS || '').split(',').filter(Boolean),
+    origin: (origin) => {
+      // In Cloudflare Workers, we need to handle CORS more carefully
+      const allowedOrigins = (process.env.CORS_ORIGINS || '')
+        .split(',')
+        .filter(Boolean)
+      if (allowedOrigins.length === 0) {
+        // Default to localhost for development
+        return origin?.includes('localhost') || origin?.includes('127.0.0.1')
+          ? origin
+          : null
+      }
+      return allowedOrigins.includes(origin || '') ? origin : null
+    },
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
     credentials: true,
   })
 )
 
+// Auth routes
 app.on(['POST', 'GET', 'OPTIONS'], '/api/auth/**', (c) =>
   auth.handler(c.req.raw)
 )
 
+// ORPC routes
 const handler = new RPCHandler(appRouter)
 app.use('/rpc/*', async (c, next) => {
   const context = await createContext({ context: c })
@@ -39,6 +51,7 @@ app.use('/rpc/*', async (c, next) => {
   await next()
 })
 
+// Health check
 app.get('/', (c) => {
   return c.text('OK')
 })
@@ -46,14 +59,7 @@ app.get('/', (c) => {
 // Setup SSE routes
 setupSSERoutes(app)
 
-import { serve } from '@hono/node-server'
-
-serve(
-  {
-    fetch: app.fetch,
-    port: 3000,
-  },
-  (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`)
-  }
-)
+// Export for Cloudflare Workers
+export default {
+  fetch: app.fetch,
+}
