@@ -251,7 +251,7 @@ function RouteComponent() {
   const meeting = meetingQuery.data
 
   return (
-    <div className="full-height-gradient bg-gradient-to-br from-gray-50 to-gray-100 pb-8">
+    <div className="h-full bg-gradient-to-br from-gray-50 to-gray-100 pb-8">
       <div className="container mx-auto py-8">
         {/* Breadcrumb Navigation */}
         <div className="mb-6">

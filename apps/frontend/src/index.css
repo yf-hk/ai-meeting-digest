@@ -135,10 +135,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-@layer utilities {
-  .full-height-gradient {
-    min-height: 100vh;
-    min-height: 100dvh; /* Dynamic viewport height for mobile */
-  }
-}
