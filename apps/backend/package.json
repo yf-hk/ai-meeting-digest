@@ -8,6 +8,7 @@
     "build:worker": "tsdown --entry src/worker.ts --outdir dist",
     "check-types": "tsc -b",
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
+    "predev": "bun run db:push",
     "dev": "tsx watch src/index.ts",
     "dev:worker": "wrangler dev",
     "start": "node dist/index.js",
@@ -48,6 +49,6 @@
     "tsx": "^4.19.2",
     "typescript": "^5.8.2",
     "vitest": "^3.2.4",
-    "wrangler": "^3.0.0"
+    "wrangler": "^4.26.1"
   }
 }

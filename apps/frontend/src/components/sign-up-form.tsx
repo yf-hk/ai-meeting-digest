@@ -1,5 +1,6 @@
 import { useForm } from '@tanstack/react-form'
 import { useNavigate } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import z from 'zod'
 import { authClient } from '@/lib/auth-client'
@@ -16,7 +17,18 @@ export default function SignUpForm({
   const navigate = useNavigate({
     from: '/',
   })
-  const { isPending } = authClient.useSession()
+  const { data: session, isPending } = authClient.useSession()
+  const [isSigningUp, setIsSigningUp] = useState(false)
+
+  // Auto-redirect to dashboard if user becomes authenticated
+  useEffect(() => {
+    if (session && !isPending && isSigningUp) {
+      navigate({
+        to: '/dashboard',
+      })
+      setIsSigningUp(false)
+    }
+  }, [session, isPending, isSigningUp, navigate])
 
   const form = useForm({
     defaultValues: {
@@ -25,6 +37,8 @@ export default function SignUpForm({
       name: '',
     },
     onSubmit: async ({ value }) => {
+      setIsSigningUp(true)
+
       await authClient.signUp.email(
         {
           email: value.email,
@@ -33,13 +47,12 @@ export default function SignUpForm({
         },
         {
           onSuccess: () => {
-            navigate({
-              to: '/dashboard',
-            })
-            toast.success('Sign up successful')
+            toast.success('Account created successfully! Signing you in...')
+            // The useEffect hook will handle navigation when session is available
           },
           onError: (error) => {
             toast.error(error.error.message)
+            setIsSigningUp(false)
           },
         }
       )
@@ -53,7 +66,7 @@ export default function SignUpForm({
     },
   })
 
-  if (isPending) {
+  if (isPending || isSigningUp) {
     return <Loader />
   }
 
@@ -143,10 +156,12 @@ export default function SignUpForm({
           {(state) => (
             <Button
               className="w-full"
-              disabled={!state.canSubmit || state.isSubmitting}
+              disabled={!state.canSubmit || state.isSubmitting || isSigningUp}
               type="submit"
             >
-              {state.isSubmitting ? 'Submitting...' : 'Sign Up'}
+              {state.isSubmitting || isSigningUp
+                ? 'Creating account...'
+                : 'Sign Up'}
             </Button>
           )}
         </form.Subscribe>
