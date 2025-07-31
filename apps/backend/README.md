@@ -1,6 +1,6 @@
 # AI Meeting Digest Backend
 
-A modern, type-safe backend API built with Hono.js, ORPC, and TypeScript. Supports both Node.js and Cloudflare Workers deployment.
+A modern, type-safe backend API built with Hono.js, ORPC, and TypeScript for Node.js deployment.
 
 ## 🏗️ Architecture
 
@@ -22,15 +22,13 @@ src/routers/
 └── analytics.ts      # Analytics and insights
 ```
 
-### Entry Points
+### Entry Point
 
-- **Node.js Development**: `src/index.ts`
-- **Cloudflare Workers**: `src/worker.ts`
-- **SSE Routes**: `src/routes/sse.ts`
+- **Node.js**: `src/index.ts` (includes SSE routes)
 
 ## 🚀 Quick Start
 
-### Local Development (Node.js)
+### Local Development
 
 ```bash
 # Install dependencies
@@ -49,27 +47,13 @@ bun run db:push
 bun run dev
 ```
 
-### Cloudflare Workers Development
-
-```bash
-# Build for Workers
-bun run build:worker
-
-# Start local Workers development
-bun run dev:worker
-# or
-./dev-worker.sh
-```
-
 ## 📦 Available Scripts
 
 ### Development
-- `bun run dev` - Start Node.js development server
-- `bun run dev:worker` - Start Cloudflare Workers development server
+- `bun run dev` - Start development server with hot reload
 
 ### Building
-- `bun run build` - Build for Node.js
-- `bun run build:worker` - Build for Cloudflare Workers
+- `bun run build` - Build for production
 
 ### Database
 - `bun run db:start` - Start PostgreSQL with Docker
@@ -83,8 +67,7 @@ bun run dev:worker
 - `bun run test:ui` - Run tests with UI
 
 ### Deployment
-- `bun run deploy` - Deploy to Cloudflare Workers
-- `./deploy.sh` - Full deployment script
+- `bun run start` - Start production server
 
 ## 🌐 API Routes
 
@@ -174,7 +157,7 @@ wrangler secret put CORS_ORIGINS
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: Better Auth
 - **AI**: OpenRouter with Google Gemini
-- **Deployment**: Node.js or Cloudflare Workers
+- **Deployment**: Node.js
 - **Build Tool**: tsdown (Rolldown)
 
 ## 📁 Project Structure
@@ -199,29 +182,13 @@ apps/backend/
 │   │   ├── digest.ts       # Digest routes
 │   │   ├── workspaces.ts   # Workspace routes
 │   │   └── analytics.ts    # Analytics routes
-│   ├── routes/             # Additional routes
-│   │   └── sse.ts          # Server-Sent Events
-│   ├── index.ts            # Node.js entry point
-│   └── worker.ts           # Cloudflare Workers entry point
-├── prisma/                 # Database schema
-├── wrangler.toml          # Cloudflare Workers config
-├── deploy.sh              # Deployment script
-├── dev-worker.sh          # Development script
-└── CLOUDFLARE_DEPLOYMENT.md # Deployment guide
+│   └── index.ts            # Main entry point (includes SSE)
+└── prisma/                 # Database schema
 ```
 
 ## 🚀 Deployment
 
-### Cloudflare Workers (Recommended)
-
-See [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md) for detailed instructions.
-
-Quick deployment:
-```bash
-./deploy.sh
-```
-
-### Node.js
+### Node.js Production
 
 ```bash
 # Build
@@ -264,6 +231,6 @@ bun run test src/lib/__tests__/ai.test.ts
 ## 📊 Monitoring
 
 - **Development**: Console logs and error handling
-- **Production**: Cloudflare Workers analytics and logs
+- **Production**: Node.js process monitoring
 - **Database**: Prisma query logging
 - **Performance**: Built-in Hono.js metrics

@@ -5,14 +5,14 @@
   "type": "module",
   "scripts": {
     "build": "bun build src/index.ts --outdir dist",
-    "build:worker": "bun build src/worker.ts --outdir dist",
+
     "check-types": "bun --check src/**/*.ts",
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
     "predev": "bun run db:push",
     "dev": "bun --watch src/index.ts",
-    "dev:worker": "wrangler dev",
+
     "start": "bun dist/index.js",
-    "deploy": "wrangler deploy",
+
     "test": "bun test",
     "test:run": "bun test",
     "test:ui": "bun test --ui",
@@ -30,20 +30,19 @@
   },
   "dependencies": {
     "@ai-sdk/react": "^1.2.12",
-    "@hono/node-server": "^1.14.4",
+    "@hono/node-server": "^1.17.1",
     "@openrouter/ai-sdk-provider": "^0.7.3",
-    "@orpc/client": "^1.5.0",
-    "@orpc/server": "^1.5.0",
-    "@prisma/client": "^6.12.0",
+    "@orpc/client": "^1.7.5",
+    "@orpc/server": "^1.7.5",
+    "@prisma/client": "^6.13.0",
     "ai": "^4.3.19",
-    "better-auth": "^1.3.0",
+    "better-auth": "^1.3.4",
     "dotenv": "^17.2.1",
-    "hono": "^4.8.2",
-    "zod": "^4.0.2"
+    "hono": "^4.8.10",
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@types/node": "^24.1.0",
-    "prisma": "^6.12.0",
-    "wrangler": "^4.26.1"
+    "prisma": "^6.13.0"
   }
 }
