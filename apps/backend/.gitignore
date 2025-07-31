@@ -52,3 +52,4 @@ lerna-debug.log*
 next-env.d.ts
 
 uploads
+prisma/generated
