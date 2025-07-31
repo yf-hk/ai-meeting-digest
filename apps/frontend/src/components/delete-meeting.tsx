@@ -58,21 +58,21 @@ export function DeleteMeeting({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog onOpenChange={setOpen} open={open}>
       <AlertDialogTrigger asChild>
         {variant === 'icon' ? (
           <Button
-            variant="ghost" 
+            className="text-red-600 hover:bg-red-50 hover:text-red-700"
             size="sm"
-            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            variant="ghost"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
         ) : (
           <Button
-            variant="destructive"
-            size={size}
             className="flex items-center gap-2"
+            size={size}
+            variant="destructive"
           >
             <Trash2 className="h-4 w-4" />
             Delete Meeting
@@ -83,17 +83,17 @@ export function DeleteMeeting({
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Meeting</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete "{meetingTitle}"? This action cannot be
-            undone. All associated files, summaries, action items, and comments
-            will be permanently deleted.
+            Are you sure you want to delete "{meetingTitle}"? This action cannot
+            be undone. All associated files, summaries, action items, and
+            comments will be permanently deleted.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
-            disabled={deleteMeetingMutation.isPending}
             className="bg-red-600 hover:bg-red-700"
+            disabled={deleteMeetingMutation.isPending}
+            onClick={handleDelete}
           >
             {deleteMeetingMutation.isPending ? 'Deleting...' : 'Delete Meeting'}
           </AlertDialogAction>

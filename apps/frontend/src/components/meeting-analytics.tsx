@@ -1,7 +1,6 @@
 import {
   BarChart3,
   Brain,
-  Clock,
   MessageCircle,
   Target,
   TrendingUp,
@@ -9,25 +8,26 @@ import {
   Zap,
 } from 'lucide-react'
 import { useMemo } from 'react'
+import type { Meeting } from '../types/meeting'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
 interface MeetingAnalyticsProps {
-  meetings: any[]
+  meetings: Meeting[]
 }
 
 export function MeetingAnalytics({ meetings }: MeetingAnalyticsProps) {
   const analytics = useMemo(() => {
     const totalMeetings = meetings.length
-    const completedMeetings = meetings.filter((m) => m.status === 'COMPLETED')
+    const completedMeetings = meetings.filter((m) => m.status === 'completed')
     const totalActionItems = meetings.reduce(
-      (sum, m) => sum + (m._count?.actionItems || 0),
+      (sum, m) => sum + (m._count?.action_items || 0),
       0
     )
     const completedActionItems = meetings.reduce((sum, m) => {
       return (
         sum +
-        (m.actionItems?.filter((item: any) => item.status === 'COMPLETED')
-          .length || 0)
+        (m.action_items?.filter((item) => item.status === 'completed').length ||
+          0)
       )
     }, 0)
 
@@ -41,7 +41,7 @@ export function MeetingAnalytics({ meetings }: MeetingAnalyticsProps) {
     const actionItemCompletionRate =
       totalActionItems > 0 ? (completedActionItems / totalActionItems) * 100 : 0
     const meetingsThisWeek = meetings.filter((m) => {
-      const meetingDate = new Date(m.createdAt)
+      const meetingDate = new Date(m.created_at)
       const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
       return meetingDate >= oneWeekAgo
     }).length

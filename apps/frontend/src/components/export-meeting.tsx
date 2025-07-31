@@ -9,11 +9,16 @@ import {
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import type {
+  ActionItem,
+  Meeting,
+  ProcessedDecision,
+  ProcessedTopic,
+} from '../types/meeting'
 import { Button } from './ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
 interface ExportMeetingProps {
-  meeting: any
+  meeting: Meeting
 }
 
 export function ExportMeeting({ meeting }: ExportMeetingProps) {
@@ -79,11 +84,14 @@ export function ExportMeeting({ meeting }: ExportMeetingProps) {
         Array.isArray(meeting.summary.decisions)
       ) {
         markdown += '## Decisions\n\n'
-        meeting.summary.decisions.forEach((decision: any) => {
+        meeting.summary.decisions.forEach((decision: ProcessedDecision) => {
           markdown += `### ${decision.decision}\n`
-          if (decision.rationale)
+          if (decision.rationale) {
             markdown += `**Rationale:** ${decision.rationale}\n`
-          if (decision.owner) markdown += `**Owner:** ${decision.owner}\n`
+          }
+          if (decision.owner) {
+            markdown += `**Owner:** ${decision.owner}\n`
+          }
           markdown += '\n'
         })
       }
@@ -100,13 +108,16 @@ export function ExportMeeting({ meeting }: ExportMeetingProps) {
       }
     }
 
-    if (meeting.actionItems && meeting.actionItems.length > 0) {
+    if (meeting.action_items && meeting.action_items.length > 0) {
       markdown += '## Action Items\n\n'
-      meeting.actionItems.forEach((item: any) => {
+      meeting.action_items.forEach((item: ActionItem) => {
         markdown += `- [ ] ${item.description}`
-        if (item.assignee) markdown += ` (Assigned to: ${item.assignee.name})`
-        if (item.dueDate)
-          markdown += ` (Due: ${new Date(item.dueDate).toLocaleDateString()})`
+        if (item.assignee) {
+          markdown += ` (Assigned to: ${item.assignee})`
+        }
+        if (item.due_date) {
+          markdown += ` (Due: ${new Date(item.due_date).toLocaleDateString()})`
+        }
         markdown += '\n'
       })
       markdown += '\n'
@@ -114,7 +125,7 @@ export function ExportMeeting({ meeting }: ExportMeetingProps) {
 
     if (meeting.topics && meeting.topics.length > 0) {
       markdown += '## Discussion Topics\n\n'
-      meeting.topics.forEach((topic: any) => {
+      meeting.topics.forEach((topic: ProcessedTopic) => {
         markdown += `- **${topic.topic}**`
         if (topic.importanceScore) {
           markdown += ` (Importance: ${Math.round(topic.importanceScore * 100)}%)`
@@ -212,7 +223,7 @@ export function ExportMeeting({ meeting }: ExportMeetingProps) {
               <h2>Key Decisions</h2>
               ${meeting.summary.decisions
                 .map(
-                  (decision: any) => `
+                  (decision: ProcessedDecision) => `
                 <div style="margin: 15px 0; padding: 15px; background: #f3f4f6; border-radius: 8px;">
                   <h3>${decision.decision}</h3>
                   ${decision.rationale ? `<p><strong>Rationale:</strong> ${decision.rationale}</p>` : ''}
@@ -241,16 +252,16 @@ export function ExportMeeting({ meeting }: ExportMeetingProps) {
           }
 
           ${
-            meeting.actionItems && meeting.actionItems.length > 0
+            meeting.action_items && meeting.action_items.length > 0
               ? `
             <h2>Action Items</h2>
-            ${meeting.actionItems
+            ${meeting.action_items
               .map(
-                (item: any) => `
+                (item: ActionItem) => `
               <div class="action-item">
                 <strong>${item.description}</strong>
-                ${item.assignee ? `<br><small>Assigned to: ${item.assignee.name}</small>` : ''}
-                ${item.dueDate ? `<br><small>Due: ${new Date(item.dueDate).toLocaleDateString()}</small>` : ''}
+                ${item.assignee ? `<br><small>Assigned to: ${item.assignee}</small>` : ''}
+                ${item.due_date ? `<br><small>Due: ${new Date(item.due_date).toLocaleDateString()}</small>` : ''}
                 <br><small>Priority: ${item.priority} | Status: ${item.status}</small>
               </div>
             `
@@ -266,7 +277,7 @@ export function ExportMeeting({ meeting }: ExportMeetingProps) {
             <h2>Discussion Topics</h2>
             ${meeting.topics
               .map(
-                (topic: any) => `
+                (topic: ProcessedTopic) => `
               <div class="topic">
                 <strong>${topic.topic}</strong>
                 ${topic.importanceScore ? `<small> (Importance: ${Math.round(topic.importanceScore * 100)}%)</small>` : ''}

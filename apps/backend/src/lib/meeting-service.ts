@@ -1,3 +1,4 @@
+import type { Prisma } from '@prisma/client'
 import fs from 'fs/promises'
 import path from 'path'
 import { z } from 'zod'
@@ -67,7 +68,7 @@ export class MeetingService {
     } = {}
   ) {
     try {
-      const where: any = { userId }
+      const where: Prisma.MeetingWhereInput = { user_id: userId }
 
       if (options.workspaceId) {
         where.workspaceId = options.workspaceId

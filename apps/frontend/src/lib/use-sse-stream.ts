@@ -11,7 +11,7 @@ export interface StreamChunk {
     | 'complete'
     | 'error'
     | 'warning'
-  content: any
+  content: unknown
 }
 
 export interface UseSSEStreamOptions {

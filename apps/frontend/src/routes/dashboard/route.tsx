@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/pagination'
 import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
+import type { Meeting } from '@/types/meeting'
 import { orpc } from '@/utils/orpc'
 
 export const Route = createFileRoute('/dashboard')({
@@ -49,9 +50,9 @@ function RouteComponent() {
       },
     }),
     enabled: !!session,
-  }) as any
+  }) as { data?: { data?: Meeting[] } }
 
-  const handleShare = async (meeting: any) => {
+  const handleShare = async (meeting: Meeting) => {
     if (!meeting.summary?.publicId) return
 
     try {
@@ -137,7 +138,7 @@ function RouteComponent() {
             <CardContent>
               <div className="font-bold text-2xl text-chart-4">
                 {meetings.data?.data?.filter(
-                  (m: any) => m.status === 'COMPLETED'
+                  (m: Meeting) => m.status === 'completed'
                 ).length || 0}
               </div>
             </CardContent>
@@ -152,7 +153,7 @@ function RouteComponent() {
             <CardContent>
               <div className="font-bold text-2xl text-chart-2">
                 {meetings.data?.data?.filter(
-                  (m: any) => m.status === 'PROCESSING'
+                  (m: Meeting) => m.status === 'processing'
                 ).length || 0}
               </div>
             </CardContent>
@@ -167,7 +168,8 @@ function RouteComponent() {
             <CardContent>
               <div className="font-bold text-2xl text-primary">
                 {meetings.data?.data?.reduce(
-                  (sum: any, m: any) => sum + (m._count?.actionItems || 0),
+                  (sum: number, m: Meeting) =>
+                    sum + (m._count?.action_items || 0),
                   0
                 ) || 0}
               </div>

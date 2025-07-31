@@ -12,7 +12,6 @@
     "dev": "bun --watch src/index.ts",
 
     "start": "bun dist/index.js",
-
     "test": "bun test",
     "test:run": "bun test",
     "test:ui": "bun test --ui",

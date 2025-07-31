@@ -21,6 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/lib/auth-client'
+import type { Meeting, ProcessedTopic } from '@/types/meeting'
 import { orpc, orpcClient } from '@/utils/orpc'
 import type {
   ActionPriority,
@@ -248,7 +249,10 @@ function RouteComponent() {
     return <div>Meeting not found or access denied.</div>
   }
 
-  const meeting = meetingQuery.data
+  const meeting = meetingQuery.data as Meeting & {
+    topics?: ProcessedTopic[]
+    comments?: Array<{ id: string; content: string; author: { name: string } }>
+  }
 
   return (
     <div className="h-full bg-gradient-to-br from-gray-50 to-gray-100 pb-8">
@@ -565,17 +569,17 @@ function RouteComponent() {
           ) : null}
 
           {/* Action Items */}
-          {meeting.actionItems && meeting.actionItems.length > 0 ? (
+          {meeting.action_items && meeting.action_items.length > 0 ? (
             <Card className="border-0 shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Zap className="h-5 w-5 text-chart-4" />
-                  Action Items Extracted ({meeting.actionItems.length})
+                  Action Items Extracted ({meeting.action_items.length})
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {meeting.actionItems.map((item) => (
+                  {meeting.action_items.map((item) => (
                     <ActionItemCard
                       item={item}
                       key={item.id}

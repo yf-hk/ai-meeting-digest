@@ -14,6 +14,7 @@ import Loader from '@/components/loader'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import type { ProcessedDecision } from '@/types/meeting'
 import { orpc } from '@/utils/orpc'
 
 export const Route = createFileRoute('/digest/$publicId')({
@@ -229,7 +230,7 @@ function RouteComponent() {
                 <CardContent>
                   <div className="space-y-4">
                     {digest.summary.decisions.map(
-                      (decision: any, index: number) => (
+                      (decision: ProcessedDecision, index: number) => (
                         <div
                           className="rounded-lg border border-border bg-card/50 p-4"
                           key={index}

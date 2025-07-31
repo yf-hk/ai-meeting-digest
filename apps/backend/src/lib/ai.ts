@@ -19,9 +19,13 @@ async function generateTextWithFallback(prompt: string, temperature = 0.1) {
       temperature,
       maxRetries: 3,
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     // If rate limited, try fallback model
-    if (error?.statusCode === 429 || error?.message?.includes('rate limit')) {
+    const apiError = error as { statusCode?: number; message?: string }
+    if (
+      apiError?.statusCode === 429 ||
+      apiError?.message?.includes('rate limit')
+    ) {
       console.log('Primary model rate limited, trying fallback model...')
       return await generateText({
         model: openrouter(FALLBACK_MODEL),
