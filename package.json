@@ -20,8 +20,6 @@
     "@biomejs/biome": "^2.1.2",
     "@moonrepo/cli": "^1.39.2",
     "@playwright/test": "^1.54.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.1.2",
     "playwright": "^1.54.1",
     "ultracite": "^5.1.1"
   },
