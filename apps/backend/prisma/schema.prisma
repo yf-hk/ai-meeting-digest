@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./prisma/generated"
 }
 
 datasource db {
@@ -10,7 +9,7 @@ datasource db {
 
 // Auth models with snake_case
 model User {
-  id             String    @id @default(cuid()) @map("id") 
+  id             String    @id @default(cuid()) @map("id")
   name           String    @map("name")
   email          String    @map("email")
   email_verified Boolean   @map("email_verified")
@@ -41,20 +40,20 @@ model Session {
 }
 
 model Account {
-  id                         String    @id @default(cuid()) @map("id")
-  account_id                 String    @map("account_id")
-  provider_id                String    @map("provider_id")
-  user_id                    String    @map("user_id")
-  user                       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  access_token               String?   @map("access_token")
-  refresh_token              String?   @map("refresh_token")
-  id_token                   String?   @map("id_token")
-  access_token_expires_at    DateTime? @map("access_token_expires_at")
-  refresh_token_expires_at   DateTime? @map("refresh_token_expires_at")
-  scope                      String?   @map("scope")
-  password                   String?   @map("password")
-  created_at                 DateTime  @default(now()) @map("created_at")
-  updated_at                 DateTime  @updatedAt @map("updated_at")
+  id                       String    @id @default(cuid()) @map("id")
+  account_id               String    @map("account_id")
+  provider_id              String    @map("provider_id")
+  user_id                  String    @map("user_id")
+  user                     User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  access_token             String?   @map("access_token")
+  refresh_token            String?   @map("refresh_token")
+  id_token                 String?   @map("id_token")
+  access_token_expires_at  DateTime? @map("access_token_expires_at")
+  refresh_token_expires_at DateTime? @map("refresh_token_expires_at")
+  scope                    String?   @map("scope")
+  password                 String?   @map("password")
+  created_at               DateTime  @default(now()) @map("created_at")
+  updated_at               DateTime  @updatedAt @map("updated_at")
 
   @@map("accounts")
 }
@@ -84,7 +83,7 @@ model Meeting {
   updated_at  DateTime @updatedAt @map("updated_at")
   user_id     String   @map("user_id")
 
-  user           User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user           User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
   participants   Participant[]
   meeting_tags   MeetingTag[]
   transcript     Transcript?
@@ -149,15 +148,15 @@ model Summary {
 }
 
 model ActionItem {
-  id          String   @id @default(cuid()) @map("id")
-  description String   @map("description")
-  assignee    String?  @map("assignee")
+  id          String    @id @default(cuid()) @map("id")
+  description String    @map("description")
+  assignee    String?   @map("assignee")
   due_date    DateTime? @map("due_date")
-  priority    String   @default("medium") @map("priority")
-  status      String   @default("pending") @map("status")
-  meeting_id  String   @map("meeting_id")
-  created_at  DateTime @default(now()) @map("created_at")
-  updated_at  DateTime @updatedAt @map("updated_at")
+  priority    String    @default("medium") @map("priority")
+  status      String    @default("pending") @map("status")
+  meeting_id  String    @map("meeting_id")
+  created_at  DateTime  @default(now()) @map("created_at")
+  updated_at  DateTime  @updatedAt @map("updated_at")
 
   meeting Meeting @relation(fields: [meeting_id], references: [id], onDelete: Cascade)
 
@@ -165,15 +164,15 @@ model ActionItem {
 }
 
 model ProcessingJob {
-  id             String    @id @default(cuid()) @map("id")
-  meeting_id     String    @map("meeting_id")
-  job_type       String    @map("job_type")
-  status         String    @default("pending") @map("status")
-  progress       Int       @default(0) @map("progress")
-  error_message  String?   @map("error_message")
-  started_at     DateTime? @map("started_at")
-  completed_at   DateTime? @map("completed_at")
-  created_at     DateTime  @default(now()) @map("created_at")
+  id            String    @id @default(cuid()) @map("id")
+  meeting_id    String    @map("meeting_id")
+  job_type      String    @map("job_type")
+  status        String    @default("pending") @map("status")
+  progress      Int       @default(0) @map("progress")
+  error_message String?   @map("error_message")
+  started_at    DateTime? @map("started_at")
+  completed_at  DateTime? @map("completed_at")
+  created_at    DateTime  @default(now()) @map("created_at")
 
   meeting Meeting @relation(fields: [meeting_id], references: [id], onDelete: Cascade)
 
