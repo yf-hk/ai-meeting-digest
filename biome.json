@@ -12,12 +12,14 @@
         "useSemanticElements": "warn"
       },
       "complexity": {
-        "noExcessiveCognitiveComplexity": "warn"
+        "noExcessiveCognitiveComplexity": "warn",
+        "noForEach": "warn"
       },
       "correctness": {
         "useExhaustiveDependencies": "warn"
       },
       "nursery": {
+        "noAwaitInLoop": "warn",
         "noShadow": "warn"
       },
       "performance": {
@@ -27,11 +29,15 @@
         "noDangerouslySetInnerHtml": "warn"
       },
       "style": {
-        "noNestedTernary": "warn"
+        "noNestedTernary": "warn",
+        "noNonNullAssertion": "warn",
+        "noParameterAssign": "warn",
+        "useDefaultSwitchClause": "warn"
       },
       "suspicious": {
         "noArrayIndexKey": "warn",
-        "noConsole": "warn"
+        "noConsole": "warn",
+        "useAwait": "warn"
       }
     }
   }
