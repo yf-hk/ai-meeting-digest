@@ -26,6 +26,12 @@ export function useSSEStream(options: UseSSEStreamOptions = {}) {
   const [currentStatus, setCurrentStatus] = useState<string>('')
   const [streamingText, setStreamingText] = useState<string>('')
   const eventSourceRef = useRef<EventSource | null>(null)
+  const optionsRef = useRef(options)
+
+  // Update options ref when options change
+  useEffect(() => {
+    optionsRef.current = options
+  }, [options])
 
   const startStream = useCallback(
     (url: string) => {
@@ -59,16 +65,16 @@ export function useSSEStream(options: UseSSEStreamOptions = {}) {
             case 'complete':
               setIsStreaming(false)
               setCurrentStatus('Complete!')
-              options.onComplete?.()
+              optionsRef.current.onComplete?.()
               break
             case 'error':
               setIsStreaming(false)
               setCurrentStatus(`Error: ${chunk.content}`)
-              options.onError?.(chunk.content)
+              optionsRef.current.onError?.(chunk.content)
               break
           }
 
-          options.onChunk?.(chunk)
+          optionsRef.current.onChunk?.(chunk)
         } catch (error) {
           console.error('Failed to parse SSE data:', error)
         }
@@ -78,7 +84,7 @@ export function useSSEStream(options: UseSSEStreamOptions = {}) {
         console.error('SSE connection error:', error)
         setIsStreaming(false)
         setCurrentStatus('Connection error')
-        options.onError?.('Connection failed')
+        optionsRef.current.onError?.('Connection failed')
         eventSource.close()
       }
 
@@ -86,7 +92,7 @@ export function useSSEStream(options: UseSSEStreamOptions = {}) {
         console.log('SSE connection opened')
       }
     },
-    [isStreaming, options]
+    [isStreaming]
   )
 
   const stopStream = useCallback(() => {

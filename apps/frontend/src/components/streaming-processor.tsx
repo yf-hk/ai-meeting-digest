@@ -8,7 +8,7 @@ import {
   MessageSquare,
   Zap,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { type StreamChunk, useSSEStream } from '@/lib/use-sse-stream'
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
@@ -64,20 +64,20 @@ export function StreamingProcessor({
     },
   })
 
-  const handleStartProcessing = () => {
+  const handleStartProcessing = useCallback(() => {
     setProcessing(true)
     startStream(`/api/meetings/${meetingId}/process-stream`)
-  }
+  }, [meetingId, startStream])
 
-  const handleStopProcessing = () => {
+  const handleStopProcessing = useCallback(() => {
     setProcessing(false)
     stopStream()
-  }
+  }, [stopStream])
 
   // Auto-start processing when component mounts
   useEffect(() => {
     handleStartProcessing()
-  }, [meetingId])
+  }, [meetingId, handleStartProcessing])
 
   return (
     <div className="space-y-6">
