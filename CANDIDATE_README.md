@@ -18,7 +18,7 @@ I chose this modern, type-safe stack for several reasons:
 - **OpenRouter**: Provides access to multiple AI models (Gemini 2.5 Flash, Llama 3.2) with automatic fallback, rate limiting protection, and unified API interface for reliability
 - **Tailwind CSS**: Rapid UI development with consistent design system
 
-I prefer cutting-edge software and frameworks that offer superior performance, cost-effectiveness, and robustness. 
+I prefer using cutting-edge software and frameworks that offer superior performance, cost-effectiveness, and robustness. I tend to go to the extreme, both with technology and with products. Honestly, this can be both a good and a bad thing. If I have to work in a team where people don’t care about or love new technologies, or aren’t willing to push boundaries, I find myself lacking motivation and end up doing mediocre work—work that I know could be so much better.
 
 ### Development Tools & Workflow
 
