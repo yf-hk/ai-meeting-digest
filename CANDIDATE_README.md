@@ -1,5 +1,8 @@
 # AI Meeting Digest - Candidate Submission
 
+## 0. Demo
+https://md.1art.cn user: user@test.com password: 123456789 (user auth is fully working, supporting both login and registration) 
+
 ## 1. Technology Choices
 
 * **Frontend:** React 19 with TanStack Router, TanStack Query, and Tailwind CSS
